@@ -1,0 +1,77 @@
+
+void destruir_dato(void*){
+	free (void*);
+}
+
+// destuir 01
+void cola_destruir(cola_t *cola, void destruir_dato(void*)){	
+	void* dato;	
+	if (destruir_dato(void*) != NULL){
+		dato = cola_desencolar(cola);
+		destruir_dato(dato);
+		}
+	while (cola_esta_vacia(cola) == false){
+		dato = cola_desencolar(cola);
+		}
+	free(cola);
+}
+
+// destruir 02
+void cola_destruir(cola_t *cola, void destruir_dato(void*)){	
+	void* dato;	
+	while (cola_esta_vacia(cola) == false){
+		dato = cola_desencolar(cola);
+		if (destruir_dato(dato)){
+			free(dato);
+			}
+		}	
+	free(cola);
+}
+
+
+	int* valor02;	
+	valor02 = malloc(sizeof(int));
+	int* valor03;
+	valor03 = malloc(sizeof(int));
+	*valor02 = 3;
+	cola_encolar(cola01, &valor02);
+	*valor03 = 2;
+	cola_encolar(cola01, &valor03);	
+	print_test("el primer elemento de mi cola es 5", cola_ver_primero(cola01) == &valor01);
+
+
+
+
+
+void* cola_desencolar(cola_t *cola){	
+	void* valor_desencolado;	
+	if (cola_esta_vacia(cola)){
+		return NULL;
+		}
+	nodo_t* auxiliar = cola->primero;
+	auxiliar->siguiente = cola->primero->siguiente;
+	free (cola->primero); 	  
+	cola->primero = auxiliar->siguiente; 
+	valor_desencolado = auxiliar->dato;
+	return valor_desencolado;
+}
+
+
+
+
+
+
+
+
+
+
+
+cola_destruir(cola01, NULL);
+
+
+
+
+
+
+
+

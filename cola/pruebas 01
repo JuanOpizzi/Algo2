@@ -1,0 +1,107 @@
+//#include "cola.h"
+//#include "testing.h"
+//#include <stddef.h>
+
+//#include <stdio.h>
+//#include <stdlib.h>
+
+
+/* ******************************************************************
+ *                   PRUEBAS UNITARIAS ALUMNO
+ * *****************************************************************/
+
+//  	
+
+
+void pruebas_cola_alumno() {
+	cola_t* ejemplo = NULL;
+	print_test("Puntero inicializado a NULL", ejemplo == NULL);
+
+	printf("Prueba 01\n");
+	cola_t* cola01 = cola_crear();	
+	printf("encolo elementos del mismo tipo\n");
+	print_test("La cola esta vacia", cola_esta_vacia(cola01) == true);	
+	int* valor01;
+	valor01 = malloc(sizeof(int));	
+	*valor01 = 5;
+	cola_encolar(cola01, &valor01);
+	print_test("La cola no esta vacia", cola_esta_vacia(cola01) == false);
+	int* valor02;	
+	valor02 = malloc(sizeof(int));
+	int* valor03;
+	valor03 = malloc(sizeof(int));
+	*valor02 = 3;
+	cola_encolar(cola01, &valor02);
+	*valor03 = 2;
+	cola_encolar(cola01, &valor03);	
+	print_test("el primer elemento de mi cola es 5", cola_ver_primero(cola01) == &valor01);
+	free(valor01);
+	free(valor02);
+	free(valor03);
+	cola_destruir(cola01, NULL);
+	print_test("La cola fue destruida", true);
+
+	printf("Prueba 02\n");
+	cola_t* cola02 = cola_crear();
+	printf("Encolo y desencolo 2 elementos de distinto tipo\n");
+	int* entero;
+	entero = malloc (sizeof(int));
+	double* no_entero;
+	no_entero = malloc (sizeof(double));	
+	*entero = 5;
+	*no_entero = 4.5;
+	cola_encolar(cola02, &entero);
+	cola_encolar(cola02, &no_entero);
+	print_test("Veo que el primer elemento de la cola sea correcto", cola_ver_primero(cola02) == &entero);
+	print_test("Desencolo mi primero elemento de la cola", cola_desencolar(cola02) == &entero);
+	print_test("Desencolo el otro elemento de mi cola", cola_desencolar(cola02) == &no_entero);
+	print_test("La cola esta vacia", cola_esta_vacia(cola02) == true);
+	free(entero);
+	free(no_entero);
+	cola_destruir(cola02, NULL);
+	print_test("La cola fue destruida", true);
+
+	printf("Prueba 03\n");
+	//void wrapper(void* dato){  //asumiendo que el error es de las pruebas, Valgrind dice que aca esta el error
+    	//cola_destruir((cola_t*)dato, NULL);// tambien tira 2 errores aca, antes y despues del error del wrapper
+	//}
+	void destruir_cola_interior(void* cola_interior){
+		cola_destruir(cola_interior, NULL);
+	}
+	cola_t* cola03 = cola_crear();
+	printf("Encolo colas dentro de mi cola\n");
+	cola_t* colaA = cola_crear();
+	cola_t* colaB = cola_crear();
+	int* valor1;
+	valor1 = malloc(sizeof(int));	
+	*valor1 = 8;
+	cola_encolar(colaA, &valor1);
+	int* valor2;
+	valor2 = malloc(sizeof(int));	
+	*valor2 = 50;
+	cola_encolar(colaA, &valor2);
+	int* valor3;
+	valor3 = malloc(sizeof(int));	
+	*valor3 = 35;
+	cola_encolar(colaA, &valor3);
+	//
+	int* valor4;	
+	valor4 = malloc(sizeof(int));	
+	*valor4 = 72;
+	int* valor5;
+	valor5 = malloc(sizeof(int));	
+	*valor5 = 64;
+	int* valor6;
+	valor6 = malloc(sizeof(int));	
+	*valor6 = 32;
+	cola_encolar(colaB, &valor4);
+	cola_encolar(colaB, &valor5);
+	cola_encolar(colaB, &valor6);
+	cola_encolar(cola03, &colaA);
+	cola_encolar(cola03, &colaB);
+	print_test("Veo que el primer elemento de la cola sea correcto", cola_ver_primero(cola03) == &colaA);
+	print_test("La cola no esta vacia", cola_esta_vacia(cola03) == false);
+	//cola_destruir(cola03, wrapper);
+	cola_destruir(colaA, destruir_cola_interior);
+	print_test("la cola fue destruida", true);
+}
